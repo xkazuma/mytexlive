@@ -1,0 +1,16 @@
+#!/bin/bash
+CURRENTDIR=`pwd`
+DISPLAY=$(echo $DISPLAY)
+WAYLAND_DISPLAY=$(echo $WAYLAND_DISPLAY)
+XDG_RUNTIME_DIR=$(echo $XDG_RUNTIME_DIR)
+docker run --rm \
+  -v ${CURRENTDIR}:/workspace \
+  -w /workspace \
+  --mount type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix \
+  --mount type=bind,source=/mnt/wslg,target=/mnt/wslg \
+  --mount type=bind,source=/run/user/$(id -u),target=/run/user/$(id -u) \
+  --env DISPLAY=${DISPLAY} \
+  --env WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
+  --env XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
+  mytexlive:tl2022 \
+  latexmk -pvc
